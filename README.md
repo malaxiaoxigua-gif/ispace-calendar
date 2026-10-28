@@ -59,7 +59,7 @@
 | Secret 名称 | 说明 | 示例 |
 | :--- | :--- | :--- |
 | `ISPACE_CALENDAR_URL` | iSpace 导出的只读日历 URL | `https://.../calendar/export_execute.php?...` |
-| `CALENDAR_FILENAME` | *(可选)* 自定义暗号文件名，保障隐私 | `my_schedule_98k2.ics` |
+| `CALENDAR_FILENAME` | *(可选)* 自定义暗号文件名，保障隐私 | `my_schedule_1234.ics` |
 
 ### 3. 配置学期课表
 编辑根目录下的 `timetable.json`，按实际情况修改开学日期、上课时间、星期与教室：
