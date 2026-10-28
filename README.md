@@ -1,16 +1,3 @@
-为你量身设计了一份**非常高大上、排版精致、并且完全脱敏（绝不泄露你的学校、个人隐私或真实学号）**的开源项目风格 `README.md`！
-
-任何人点进你的 GitHub 仓库，都会觉得这是一个专业、优雅的开源日历同步工具。
-
----
-
-### 操作方法（10秒钟）：
-
-1. 打开这个网页：[https://github.com/malaxiaoxigua-gif/ispace-calendar/blob/main/README.md](https://github.com/malaxiaoxigua-gif/ispace-calendar/blob/main/README.md)
-2. 点击右上角的 **小铅笔图标 ✏️（Edit）**。
-3. 按 **`Ctrl + A`（全选）** 清空，把下面整段内容完整粘贴进去：
-
-```markdown
 # 📅 iSpace / Moodle Calendar Sync
 
 > 一个基于 GitHub Actions 的自动化日历同步工具。自动抓取高校 iSpace (Moodle) 教学系统的作业与测验 DDL，注入强力提前提醒，融合学期课表，并生成标准的 Apple Calendar / Google Calendar 订阅源。
@@ -55,9 +42,7 @@
           │
           ▼ (webcal:// 原生订阅)
   [ iPhone / iPad / Mac / Android ]
-```
 
----
 
 ## 🚀 快速使用指南
 
