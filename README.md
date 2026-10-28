@@ -42,24 +42,29 @@
           │
           ▼ (webcal:// 原生订阅)
   [ iPhone / iPad / Mac / Android ]
-🚀 快速使用指南
-1. 获取 iSpace 只读日历链接
-登录学校 iSpace / Moodle 教学平台。
-进入 日历 (Calendar) 页面，滚动至底部点击 「导出日历 (Export calendar)」。
-选择 「所有事件」 和 「最近和未来 60 天」，点击 「获取日历 URL」 并复制。
-2. 配置 GitHub 仓库密钥 (Secrets)
-进入仓库 Settings -> Secrets and variables -> Actions，添加以下密钥：
+```
 
-Secret 名称	说明	示例
-ISPACE_CALENDAR_URL	iSpace 导出的只读日历 URL	
-https://.../calendar/export_execute.php?...
-CALENDAR_FILENAME	(可选) 自定义暗号文件名，保障隐私	my_schedule_98k2.ics
-3. 配置学期课表
-编辑根目录下的 timetable.json，按实际情况修改开学日期、上课时间、星期与教室：
+---
 
-json
+## 🚀 快速使用指南
 
+### 1. 获取 iSpace 只读日历链接
+1. 登录学校 iSpace / Moodle 教学平台。
+2. 进入 **日历 (Calendar)** 页面，滚动至底部点击 **「导出日历 (Export calendar)」**。
+3. 选择 **「所有事件」** 和 **「最近和未来 60 天」**，点击 **「获取日历 URL」** 并复制。
 
+### 2. 配置 GitHub 仓库密钥 (Secrets)
+进入仓库 **Settings** -> **Secrets and variables** -> **Actions**，添加以下密钥：
+
+| Secret 名称 | 说明 | 示例 |
+| :--- | :--- | :--- |
+| `ISPACE_CALENDAR_URL` | iSpace 导出的只读日历 URL | `https://.../calendar/export_execute.php?...` |
+| `CALENDAR_FILENAME` | *(可选)* 自定义暗号文件名，保障隐私 | `my_schedule_98k2.ics` |
+
+### 3. 配置学期课表
+编辑根目录下的 `timetable.json`，按实际情况修改开学日期、上课时间、星期与教室：
+
+```json
 {
   "semester_start_date": "2026-09-01",
   "total_weeks": 16,
@@ -76,20 +81,20 @@ json
     }
   ]
 }
-4. 在手机中添加订阅
-打开 iPhone 「设置」 -> 「日历」 -> 「日历账户」。
-点击 「添加账户」 -> 「其他」 -> 「添加已订阅的日历」。
-输入你的订阅链接：
-代码块
+```
 
+### 4. 在手机中添加订阅
 
-https://<你的用户名>.github.io/<仓库名>/<你的文件名>.ics
-确认 「移除提醒」处于关闭状态，点击存储即可完成！
-📄 开源许可
-本项目采用 MIT 许可证 开源。
+1. 打开 iPhone **「设置」** -> **「日历」** -> **「日历账户」**。
+2. 点击 **「添加账户」** -> **「其他」** -> **「添加已订阅的日历」**。
+3. 输入你的订阅链接：
+   ```text
+   https://<你的用户名>.github.io/<仓库名>/<你的文件名>.ics
+   ```
+4. 确认 **「移除提醒」处于关闭状态**，点击存储即可完成！
 
-代码块
+---
 
+## 📄 开源许可
 
-
-4. 保存后，再刷新页面看一眼，这次大标题、表格、架构图和代码框就会全部渲染得漂漂亮亮了！
+本项目采用 [MIT 许可证](LICENSE) 开源。
