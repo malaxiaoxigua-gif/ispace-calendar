@@ -34,6 +34,7 @@ jobs:
         env:
           ISPACE_CALENDAR_URL: ${{ secrets.ISPACE_CALENDAR_URL }}
           CALENDAR_FILENAME: ${{ secrets.CALENDAR_FILENAME }}
+          TIMETABLE_JSON: ${{ secrets.TIMETABLE_JSON }}
         run: |
           python sync_calendar.py
 
