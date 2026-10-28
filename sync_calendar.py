@@ -7,7 +7,7 @@ BNBU / UIC iSpace Calendar & Timetable Sync Engine
 - Formats course names & assignments cleanly
 - Injects 2-day (TRIGGER:-P2D) and 2-hour (TRIGGER:-PT2H) alerts
 - Merges semester timetable (classes)
-- Outputs standard iCalendar (.ics)
+- Outputs standard iCalendar (.ics) with custom secret filename
 """
 
 import os
@@ -41,7 +41,7 @@ def fetch_ispace_calendar(url: str) -> str:
         return resp.read().decode("utf-8", errors="ignore")
 
 def unfold_ics_lines(raw_ics: str) -> list:
-    """Unfold lines according to RFC 5545 (lines beginning with space or tab continue previous line)."""
+    """Unfold lines according to RFC 5545."""
     raw_lines = raw_ics.replace("\r\n", "\n").split("\n")
     unfolded = []
     for line in raw_lines:
@@ -233,7 +233,12 @@ def main():
 
     out_dir = "dist"
     os.makedirs(out_dir, exist_ok=True)
-    out_file = os.path.join(out_dir, "calendar.ics")
+    
+    # 支持自定义加密文件名（暗号）
+    filename = os.environ.get("CALENDAR_FILENAME", "").strip() or "calendar.ics"
+    if not filename.endswith(".ics"):
+        filename += ".ics"
+    out_file = os.path.join(out_dir, filename)
 
     ics_content = [
         "BEGIN:VCALENDAR",
@@ -252,8 +257,9 @@ def main():
     with open(out_file, "w", encoding="utf-8", newline="") as f:
         f.write(full_ics_text)
 
-    with open("calendar.ics", "w", encoding="utf-8", newline="") as f:
-        f.write(full_ics_text)
+    # 生成一个空白 index.html 防止任何访客通过网页浏览文件列表
+    with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as f:
+        f.write("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>404 Not Found</h1></body></html>")
 
     print(f"\n[OK] 日历生成成功！输出路径: {out_file} (总计 {len(all_events)} 个日程事件)")
 
