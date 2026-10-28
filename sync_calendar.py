@@ -6,7 +6,7 @@ BNBU / UIC iSpace Calendar & Timetable Sync Engine
 - Performs RFC 5545 line unfolding
 - Formats course names & assignments cleanly
 - Injects 2-day (TRIGGER:-P2D) and 2-hour (TRIGGER:-PT2H) alerts
-- Merges semester timetable (classes)
+- Merges semester timetable (classes) from encrypted secrets or local config
 - Outputs standard iCalendar (.ics) with custom secret filename
 """
 
@@ -138,13 +138,30 @@ def enhance_single_event(lines: list) -> list:
 
     return new_lines
 
-def generate_timetable_events(timetable_file: str) -> list:
-    """Generate VEVENTs from timetable.json config."""
-    if not os.path.exists(timetable_file):
-        return []
+def generate_timetable_events(timetable_file: str = "timetable.json") -> list:
+    """Generate VEVENTs from TIMETABLE_JSON secret (priority) or local json file."""
+    data = None
 
-    with open(timetable_file, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    # 1. 优先读取 GitHub Secrets 中的 TIMETABLE_JSON 环境变量（做到100%隐私脱敏）
+    env_json = os.environ.get("TIMETABLE_JSON", "").strip()
+    if env_json:
+        try:
+            data = json.loads(env_json, strict=False)
+            print("已从加密密钥 (TIMETABLE_JSON) 成功加载课表配置！")
+        except Exception as e:
+            print(f"解析 TIMETABLE_JSON 失败: {e}")
+
+    # 2. 次选本地文件
+    if not data and timetable_file and os.path.exists(timetable_file):
+        try:
+            with open(timetable_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            print(f"已从本地文件 ({timetable_file}) 加载课表配置。")
+        except Exception as e:
+            print(f"读取本地课表文件失败: {e}")
+
+    if not data:
+        return []
 
     start_str = data.get("semester_start_date")
     if not start_str:
@@ -221,20 +238,21 @@ def main():
     else:
         print("未检测到 ISPACE_CALENDAR_URL，跳过 iSpace 作业抓取。")
 
+    # 课表处理：优先读取 Secret 加密课表
     timetable_file = "timetable.json"
     if not os.path.exists(timetable_file) and os.path.exists("timetable.sample.json"):
         timetable_file = "timetable.sample.json"
 
-    if os.path.exists(timetable_file):
-        print(f"正在读取课表配置: {timetable_file}...")
-        course_events = generate_timetable_events(timetable_file)
+    course_events = generate_timetable_events(timetable_file)
+    if course_events:
         print(f"成功生成了 {len(course_events)} 节课表日程（已包含课前提醒）")
         all_events.extend(course_events)
+    else:
+        print("未检测到课表配置，跳过课表生成。")
 
     out_dir = "dist"
     os.makedirs(out_dir, exist_ok=True)
     
-    # 支持自定义加密文件名（暗号）
     filename = os.environ.get("CALENDAR_FILENAME", "").strip() or "calendar.ics"
     if not filename.endswith(".ics"):
         filename += ".ics"
@@ -246,7 +264,7 @@ def main():
         "PRODID:-//iSpace Timetable & Homework Calendar//CN",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
-        "X-WR-CALNAME:BNBU 课表与作业提醒",
+        "X-WR-CALNAME:课程表与作业提醒",
         "X-WR-TIMEZONE:Asia/Shanghai",
         VTIMEZONE_SHANGHAI
     ]
@@ -257,7 +275,6 @@ def main():
     with open(out_file, "w", encoding="utf-8", newline="") as f:
         f.write(full_ics_text)
 
-    # 生成一个空白 index.html 防止任何访客通过网页浏览文件列表
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as f:
         f.write("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>404 Not Found</h1></body></html>")
 
