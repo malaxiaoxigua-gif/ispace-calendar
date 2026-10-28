@@ -54,7 +54,6 @@ def unfold_ics_lines(raw_ics: str) -> list:
 
 def clean_course_name(categories: str) -> str:
     """Extract clean course title from CATEGORIES field."""
-    # Example: "Data Mining and Knowledge Discovery for Digital Media (Dr. Tianhui MENG) [Semester 1 of 2026-2027]"
     text = categories.strip()
     if not text:
         return ""
@@ -181,6 +180,7 @@ def generate_timetable_events(timetable_file: str) -> list:
             desc_lines = [f"课程: {name}", f"地点: {location}", f"周次: 第{week}周"]
             if teacher:
                 desc_lines.append(f"教师: {teacher}")
+            desc_str = "\\n".join(desc_lines)
 
             event_lines = [
                 "BEGIN:VEVENT",
@@ -189,7 +189,7 @@ def generate_timetable_events(timetable_file: str) -> list:
                 f"DTEND;TZID=Asia/Shanghai:{dtend_str}",
                 f"SUMMARY:📚 {name}",
                 f"LOCATION:{location}",
-                f"DESCRIPTION:{'\\n'.join(desc_lines)}",
+                f"DESCRIPTION:{desc_str}",
                 "STATUS:CONFIRMED",
                 "BEGIN:VALARM",
                 "ACTION:DISPLAY",
