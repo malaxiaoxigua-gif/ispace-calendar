@@ -28,11 +28,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Run calendar sync
         env:
           ISPACE_CALENDAR_URL: ${{ secrets.ISPACE_CALENDAR_URL }}
+          CALENDAR_FILENAME: ${{ secrets.CALENDAR_FILENAME }}
         run: |
           python sync_calendar.py
 
